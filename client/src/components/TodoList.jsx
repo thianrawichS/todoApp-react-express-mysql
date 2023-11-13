@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const TodoList = () => {
     const [todo, setTodo] = useState([]);
-    const fetchData = async () => {
+    const getData = async () => {
         try {
             const response = await axios.get('http://localhost:3000/todo')
             setTodo(response.data);
@@ -13,7 +13,7 @@ const TodoList = () => {
     }
 
     useEffect(() => {
-        fetchData()
+        getData()
     }, [todo]);
 
     return (
