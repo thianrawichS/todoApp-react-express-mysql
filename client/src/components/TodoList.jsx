@@ -3,16 +3,17 @@ import axios from 'axios';
 
 const TodoList = () => {
     const [todo, setTodo] = useState([]);
+    const fetchData = async () => {
+        try {
+            const response = await axios.get('http://localhost:3000/todo')
+            setTodo(response.data);
+        } catch (err) {
+            console.error('Error executing get todo query', err)
+        }
+    }
 
     useEffect(() => {
-        axios.get('http://localhost:3000/todo')
-            .then((response) => {
-                setTodo(response.data)
-                console.log(response)
-            })
-            .catch((err) => {
-                console.error('Error getting todo data', err)
-            })
+        fetchData()
     }, [todo]);
 
     return (
