@@ -53,7 +53,7 @@ app.put('/todo/:id', async (req, res) => {
         console.log('Error executing update todo query', err);
     }
 
-    res.send('Update todo successfully');
+    res.send('Update todo successfully')
 })
 
 // delete to-do
@@ -63,9 +63,9 @@ app.delete('/todo/:id', async (req, res) => {
 
     try {
         await promisePool.query(sql, [id]);
+        res.send('Delete list successfully')
     } catch (err) {
         console.log('Error executing delete todo query', err);
+        res.status(500).send('Error delete todo')
     }
-
-    res.send('Delete todo successfully');
 })
