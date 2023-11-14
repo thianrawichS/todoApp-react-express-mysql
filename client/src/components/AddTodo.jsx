@@ -22,7 +22,7 @@ const AddTodo = () => {
             <form onSubmit={handleAddTodo}>
                 <div>
                     <label> Title </label>
-                    <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
+                    <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} required/>
                 </div>
                 <div>
                     <label> Description </label>

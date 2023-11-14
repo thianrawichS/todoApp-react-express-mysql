@@ -5,7 +5,6 @@ import EditTodo from './EditTodo';
 const TodoList = () => {
     const [todo, setTodo] = useState([]);
     const [editId, setEditId] = useState(null);
-    
     const getData = async () => {
         try {
             const response = await axios.get('http://localhost:3000/todo')
@@ -39,9 +38,10 @@ const TodoList = () => {
             <ul>
                 {todo.map((item) => (
                     <li key={item.id}>
-                        {editId === item.id ? (
-                            <TodoList 
+                        {editId == item.id ? (
+                            <EditTodo
                                 handleCancelEdit = {handleCancelEdit}
+                                todoId = {item.id}
                                 currentTitle = {item.title}
                                 currentDetail = {item.detail}
                             />
