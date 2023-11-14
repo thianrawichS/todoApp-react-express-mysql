@@ -21,7 +21,6 @@ const TodoList = () => {
             console.error('Error executing delete todo query', err)
         }
     }
-    
     const handleEditClick = (id) => {
         setEditId(id);
     };
@@ -41,8 +40,11 @@ const TodoList = () => {
                 {todo.map((item) => (
                     <li key={item.id}>
                         {editId === item.id ? (
-                            // edit clicked
-                            pass
+                            <TodoList 
+                                handleCancelEdit = {handleCancelEdit}
+                                currentTitle = {item.title}
+                                currentDetail = {item.detail}
+                            />
                         ) : (
                             <div>
                                 {item.title} - {item.detail}
