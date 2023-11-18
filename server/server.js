@@ -3,8 +3,10 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const promisePool = require('./db')
 
+require('dotenv').config();
+
 const app = express();
-const port = 3000;
+const port = process.env.PORT;
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -16,15 +18,14 @@ app.listen(port, () => {
 // get to-do
 app.get('/todo', async (req, res) => {
     const sql = "SELECT * FROM tb_todo_list ORDER BY id";
-    let todoList;
 
     try {
-        [todoList] = await promisePool.query(sql)
+        const [todoList] = await promisePool.query(sql);
+        res.json(todoList);
     } catch (err) {
         console.log('Error executing get to-do query', err)
+        res.send('Error fetching to-do list')
     }
-
-    res.json(todoList);
 })
 
 // create to-do
@@ -33,12 +34,12 @@ app.post('/todo', async (req, res) => {
     const {title, detail} = req.body;
 
     try {
-        await promisePool.query(sql, [title, detail]);
+        const [result] = await promisePool.query(sql, [title, detail]);
+        res.json(result);
     } catch (err) {
         console.log('Error executing create to-do query', err);
+        res.send('Error creating todo')
     }
-
-    res.send('Todo created successfully');
 })
 
 // update to-do
@@ -48,12 +49,12 @@ app.put('/todo/:id', async (req, res) => {
     const {title, detail} = req.body;
 
     try {
-        await promisePool.query(sql, [title, detail, id]);
+        const [result] = await promisePool.query(sql, [title, detail, id]);
+        res.json(result)
     } catch (err) {
         console.log('Error executing update todo query', err);
+        res.send('Error updating todo')
     }
-
-    res.send('Update todo successfully')
 })
 
 // delete to-do
@@ -62,10 +63,10 @@ app.delete('/todo/:id', async (req, res) => {
     const id = req.params.id;
 
     try {
-        await promisePool.query(sql, [id]);
-        res.send('Delete list successfully')
+        const [result] = await promisePool.query(sql, [id]);
+        res.json(result)
     } catch (err) {
         console.log('Error executing delete todo query', err);
-        res.status(500).send('Error delete todo')
+        res.send('Error deleting todo')
     }
 })

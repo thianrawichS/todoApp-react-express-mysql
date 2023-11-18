@@ -1,62 +1,111 @@
-import React, {useState, useEffect} from 'react';
-import axios from 'axios';
-import EditTodo from './EditTodo';
+import { useState } from 'react'
 
-const TodoList = () => {
-    const [todo, setTodo] = useState([]);
-    const [editId, setEditId] = useState(null);
-    const getData = async () => {
-        try {
-            const response = await axios.get('http://localhost:3000/todo')
-            setTodo(response.data);
-        } catch (err) {
-            console.error('Error executing get todo query', err)
-        }
+const TodoList = (props) => {
+    const {
+        todoList,
+        deleteTodoData,
+        updateTodoData,
+        handleDone
+    } = props;
+
+    const [editId, setEditId] = useState('')
+    const [editTitle, setEditTitle] = useState('')
+    const [editDetail, setEditDetail] = useState('')
+
+    const editClick = (id, title, detail) => {
+        setEditId(id)
+        setEditTitle(title)
+        setEditDetail(detail)
     }
-    const deleteData = async (id) => {
-        try {
-            await axios.delete(`http://localhost:3000/todo/${id}`)
-        } catch (err) {
-            console.error('Error executing delete todo query', err)
-        }
+    const cancelEdit = () => {
+        setEditId('')
+        setEditTitle('')
+        setEditTitle('')
     }
-    const handleEditClick = (id) => {
-        setEditId(id);
-    };
-    const handleCancelEdit = () => {
-        setEditId(null);
-    };
-
-    useEffect(() => {
-        getData()
-    });
-
-    return (
-        
-        <div>
-            <h2>Todo List</h2>
-            <ul>
-                {todo.map((item) => (
-                    <li key={item.id}>
-                        {editId == item.id ? (
-                            <EditTodo
-                                handleCancelEdit = {handleCancelEdit}
-                                todoId = {item.id}
-                                currentTitle = {item.title}
-                                currentDetail = {item.detail}
-                            />
-                        ) : (
-                            <div>
-                                {item.title} - {item.detail}
-                                <button onClick={() => handleEditClick(item.id)}>
-                                    Edit
-                                </button>
-                                <button onClick={() => deleteData(item.id)}>Delete</button>
-                            </div>
-                        )}
-                    </li>
+    const handleEdit = () => {
+        updateTodoData(editId, editTitle, editDetail)
+            .then(() => cancelEdit())
+            .catch((err) => console.error('Error updating todo', err));
+    }
+    
+    return(
+        <div className='container border rounded'>
+            <table className='table'>
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th> Title </th>
+                        <th> Detail </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {todoList.map((todo) => (
+                    <tr key={todo.id}>
+                        {editId == todo.id ? (
+                            <>
+                                <td></td>
+                                <td> 
+                                    <input 
+                                        type="text" 
+                                        value={editTitle} 
+                                        onChange={(e) => setEditTitle(e.target.value)}
+                                    /> 
+                                </td>
+                                <td> 
+                                    <input 
+                                        type="text" 
+                                        value={editDetail} 
+                                        onChange={(e) => setEditDetail(e.target.value)}
+                                    /> 
+                                </td>
+                                <td className='d-flex justify-content-end'>
+                                    <button 
+                                        onClick={() => handleEdit()} 
+                                        type='button' 
+                                        className='btn btn-success'>
+                                            <i className="fa-solid fa-check"></i>
+                                    </button> 
+                                    <button 
+                                        onClick={() => cancelEdit()} 
+                                        type='button' 
+                                        className='btn btn-danger'>
+                                            <i className="fa-solid fa-xmark"></i>
+                                    </button>
+                                </td>
+                            </>
+                            ) : (
+                            <>
+                                <td>
+                                    <input 
+                                        type="checkbox" 
+                                        className='form-check-input'
+                                        onChange={() => handleDone(todo.id)}
+                                    />
+                                </td>
+                                <td className={todo.is_done? 'todoDone' : ''}> {todo.title} </td>
+                                <td className={todo.is_done? 'todoDone' : ''}> {todo.detail} </td>
+                                <td className='d-flex justify-content-end'>
+                                    <button 
+                                        onClick={() => editClick(todo.id, todo.title, todo.detail)}
+                                        type='button' 
+                                        className='btn btn-secondary'>
+                                            <i className="fa-regular fa-pen-to-square"></i>
+                                    </button>
+                                    <button 
+                                        onClick={() => deleteTodoData(todo.id)}
+                                        type='button' 
+                                        className='btn btn-danger'>
+                                            <i className="fa-regular fa-trash-can"></i>
+                                    </button>
+                                </td>
+                            </>
+                            )
+                        }
+                    </tr>
                 ))}
-            </ul>
+                </tbody>
+            </table>
         </div>
     )
 }
