@@ -3,10 +3,10 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const promisePool = require('./db')
 
-require('dotenv').config();
+require('dotenv').config({path: '../client/.env'});
 
 const app = express();
-const port = process.env.PORT;
+const port = process.env.VITE_APP_SERVER_PORT;
 
 app.use(cors());
 app.use(bodyParser.json());
