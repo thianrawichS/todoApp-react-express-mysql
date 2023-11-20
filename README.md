@@ -11,10 +11,5 @@
 1. **Clone the Repository:**
 
 ```bash
-   git clone https://github.com/thianrawichS/todoApp-react-express-mysql.git
-   cd <your-project-folder>
-
-2. **Environment Variables:**
-- Creates a `.env` file (same directory with docker-compose file)
-
-
+git clone https://github.com/thianrawichS/todoApp-react-express-mysql.git
+cd <your-project-folder>
