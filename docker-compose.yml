@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  db:
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./db_todo.sql:/docker-entrypoint-initdb.d/db_todo.sql
+  api:
+    build: ./server/
+    ports:
+    - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_USER: ${DB_USER}
+      DB_DATABASE: ${DB_DATABASE}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      PORT: ${VITE_APP_SERVER_PORT}
+  web:
+    build: ./client/
+    ports:
+      - "5173:5173"
+    depends_on:
+      - api
+    environment:
+      VITE_APP_SERVER_PORT: ${VITE_APP_SERVER_PORT}
+
+volumes:
+  mysql_data:
