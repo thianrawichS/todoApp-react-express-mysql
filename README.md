@@ -10,7 +10,6 @@
 1. Clone repository:
    ```bash
    git clone https://github.com/thianrawichS/todoApp-react-express-mysql.git
-   cd your_project_name
 
 2. Create .env:
    - create `.env` file (same directory with docker-compose.yml)
